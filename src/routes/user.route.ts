@@ -1,14 +1,16 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const User = require("../models/user.model.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+import User from "../models/user.model";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 // POST /user/register
-router.post("/register", async (req, res) => {
+router.post("/register", async (req: any, res: any) => {
   try {
     console.log(req.body);
     const { email, password, name } = req.body;
@@ -19,23 +21,23 @@ router.post("/register", async (req, res) => {
     if (existing)
       return res.status(400).json({ error: "Email đã được đăng ký" });
 
-    const user = await User.create({ email, password, name });
+    const user = await User.create({ email, password, name }) as any;
 
     res.status(201).json({
       message: "Đăng ký thành công",
       user: { id: user.id, email: user.email, role: user.role },
     });
-  } catch (err) {
-    res.status(500).json({ error: "Lỗi server" });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
   }
 });
 
 // POST /user/login
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: any, res: any) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user: any = await User.findOne({ where: { email } });
     if (!user) return res.status(400).json({ error: "Email không đúng" });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -55,4 +57,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

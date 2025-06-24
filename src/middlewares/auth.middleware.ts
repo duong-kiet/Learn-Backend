@@ -1,8 +1,11 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const JWT_SECRET = process.env.JWT_SECRET;
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-function authenticate(req, res, next) {
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET || "";
+
+function authenticate(req: any, res: any, next: any) {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: "Không có token" });
 
@@ -17,8 +20,8 @@ function authenticate(req, res, next) {
   }
 }
 
-function authorizeRoles(...roles) {
-  return (req, res, next) => {
+function authorizeRoles(...roles: string[]) {
+  return (req: any, res: any, next: any) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ error: "Không có quyền truy cập" });
     }
@@ -26,7 +29,7 @@ function authorizeRoles(...roles) {
   };
 }
 
-module.exports = {
+export {
   authenticate,
   authorizeRoles,
 };

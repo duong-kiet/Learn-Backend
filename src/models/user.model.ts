@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database.js");
-const bcrypt = require("bcrypt");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/database";
+import bcrypt from "bcrypt";
 
 const User = sequelize.define(
   "User",
@@ -36,9 +36,9 @@ const User = sequelize.define(
 );
 
 // Mã hóa mật khẩu trước khi lưu
-User.beforeCreate(async (user) => {
+User.beforeCreate(async (user: any) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 });
 
-module.exports = User;
+export default User;

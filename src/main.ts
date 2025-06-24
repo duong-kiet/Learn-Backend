@@ -1,9 +1,10 @@
-const express = require("express");
-require("dotenv").config();
+import express from "express";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
 
-const bodyParser = require("body-parser");
+import { routes } from "./routes/index.route";
 
-const sequelize = require("./config/database");
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
@@ -14,9 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Dùng khi gửi body
 app.use(bodyParser.json());
 
-const route = require("./routes/index.route.js");
-
-route.index(app);
+routes(app);
 
 app.listen(port, async () => {
   console.log(`Example app listening on port ${port}`);
