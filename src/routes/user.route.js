@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
       user: { id: user.id, email: user.email, role: user.role },
     });
   } catch (err) {
-    res.status(500).json({ error: "Lỗi server" });
+    res.status(500).json({ error: err.message });
   }
 });
 

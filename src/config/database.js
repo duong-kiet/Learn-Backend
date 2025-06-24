@@ -2,12 +2,12 @@ const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
 const sequelize = new Sequelize(
-  "bookstore",
-  "postgres",
-  process.env.DATABASE_PASSWORD,
+  process.env.POSTGRES_DB,
+  process.env.POSTGRES_USER,
+  process.env.POSTGRES_PASSWORD,
   {
-    host: "127.0.0.1",
-    port: 5432,
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
     dialect: "postgres",
     pool: {
       max: 10, // tối đa 10 connections
