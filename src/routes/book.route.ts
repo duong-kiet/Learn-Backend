@@ -1,15 +1,15 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const Book = require("../models/book.model");
+import Book from "../models/book.model";
 
-const { authorizeRoles } = require("../middlewares/auth.middleware.js");
+import { authorizeRoles } from "../middlewares/auth.middleware";
 
 // GET /book && /book?page=1&limit=10
 router.get("/", authorizeRoles("admin", "user"), async (req, res) => {
   try {
     if (req.query.page || req.query.limit) {
-      const page = req.query.page || 1;
-      const limit = req.query.limit || 8;
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
       const offset = (page - 1) * limit;
 
       const { count, rows } = await Book.findAndCountAll({
@@ -43,13 +43,13 @@ router.post("/", authorizeRoles("admin"), async (req, res) => {
   try {
     const book = await Book.create(req.body);
     res.status(201).json(book);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
 });
 
 // GET /book/:slug
-router.get("/:slug", authorizeRoles("admin", "user"), async (req, res) => {
+router.get("/:slug", authorizeRoles("admin", "user"), async (req: any, res: any) => {
   try {
     const book = await Book.findOne({
       where: { slug: req.params.slug },
@@ -64,7 +64,7 @@ router.get("/:slug", authorizeRoles("admin", "user"), async (req, res) => {
 });
 
 // PATCH /book/:id
-router.patch("/:id", authorizeRoles("admin"), async (req, res) => {
+router.patch("/:id", authorizeRoles("admin"), async (req: any, res: any) => {
   try {
     const [updated] = await Book.update(req.body, {
       where: { id: req.params.id },
@@ -74,13 +74,13 @@ router.patch("/:id", authorizeRoles("admin"), async (req, res) => {
 
     const updatedBook = await Book.findByPk(req.params.id);
     res.json(updatedBook);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
 });
 
 // DELETE /book/:id/delete
-router.delete("/:id/delete", authorizeRoles("admin"), async (req, res) => {
+router.delete("/:id/delete", authorizeRoles("admin"), async (req: any, res: any) => {
   try {
     const deleted = await Book.destroy({ where: { id: req.params.id } });
     if (!deleted) return res.status(404).json({ error: "Không tìm thấy sách" });
@@ -91,7 +91,7 @@ router.delete("/:id/delete", authorizeRoles("admin"), async (req, res) => {
 });
 
 // PATCH /book/:id/delete
-router.patch("/:id/delete", authorizeRoles("admin"), async (req, res) => {
+router.patch("/:id/delete", authorizeRoles("admin"), async (req: any, res: any) => {
   try {
     const [updated] = await Book.update(
       {
@@ -106,9 +106,9 @@ router.patch("/:id/delete", authorizeRoles("admin"), async (req, res) => {
 
     const updatedBook = await Book.findByPk(req.params.id);
     res.json(updatedBook);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
 });
 
-module.exports = router;
+export default router;

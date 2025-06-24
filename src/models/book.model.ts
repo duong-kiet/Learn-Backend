@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database.js");
-const slugify = require("slugify");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/database";
+import slugify from "slugify";
 
 const Book = sequelize.define(
   "Book",
@@ -45,17 +45,17 @@ const Book = sequelize.define(
 );
 
 // Hook tự động tạo slug trước khi tạo bản ghi
-Book.beforeCreate((book) => {
+Book.beforeCreate((book: any) => {
   if (!book.slug && book.title) {
     book.slug = slugify(book.title, { lower: true, strict: true });
   }
 });
 
 // Hook tự động cập nhật slug khi đổi title
-Book.beforeUpdate((book) => {
+Book.beforeUpdate((book: any) => {
   if (book.changed("title")) {
     book.slug = slugify(book.title, { lower: true, strict: true });
   }
 });
 
-module.exports = Book;
+export default Book;
